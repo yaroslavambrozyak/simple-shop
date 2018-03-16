@@ -28,7 +28,7 @@ public class ProductSpecificationBuilder {
         params.forEach(param -> specifications.add(new ProductSpecification(param)));
         Specification<Product> result = specifications.get(0);
         for(int i = 1;i<specifications.size();i++){
-            result = Specifications.where(specifications.get(i));
+            result = result.and(specifications.get(i));
         }
         return result;
     }

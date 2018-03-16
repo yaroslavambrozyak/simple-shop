@@ -21,6 +21,9 @@ public class ProductSpecification implements Specification<Product> {
     @Nullable
     @Override
     public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+        if (criteria.getKey().equalsIgnoreCase("category_id")){
+            return criteriaBuilder.equal(root.join("category").get(criteria.getKey()),criteria.getValue());
+        }
         if (criteria.getOperation().equalsIgnoreCase(">")) {
             return criteriaBuilder.greaterThanOrEqualTo(
                     root.get(criteria.getKey()), criteria.getValue().toString());

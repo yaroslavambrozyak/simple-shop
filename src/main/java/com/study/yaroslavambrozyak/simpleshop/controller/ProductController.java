@@ -23,16 +23,10 @@ public class ProductController {
     @GetMapping("/products")
     public String getProducts(@RequestParam("id") Long categoryId,
                               @RequestParam(value = "filter", required = false) String filter, Model model) {
-        if (filter != null) {
-            ProductSpecificationBuilder builder = new ProductSpecificationBuilder();
-            Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
-            Matcher matcher = pattern.matcher(filter + ",");
-            while (matcher.find()) {
-                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-            }
-            Specification<Product> specification = builder.build();
+        if (filter != null && !filter.isEmpty()) {
+            Specification<Product> specification = createSpecification(categoryId, filter);
             List<Product> products = productService.getFilteredProductsByCategory(categoryId, specification);
-            model.addAttribute("prducts",products);
+            model.addAttribute("products", products);
         } else {
             List<Product> products = productService.getProductsByCategory(categoryId);
             model.addAttribute("products", products);
@@ -43,5 +37,18 @@ public class ProductController {
     @GetMapping("/product")
     public String getProduct(@RequestParam("id") Long id, Model model) {
         return null;
+    }
+
+    private Specification<Product> createSpecification(Long id, String filter) {
+        String categoryId = "category";
+        String operationEqual = ":";
+        ProductSpecificationBuilder builder = new ProductSpecificationBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
+        Matcher matcher = pattern.matcher(filter + ",");
+        builder.with(categoryId,operationEqual,id);
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+        return builder.build();
     }
 }
