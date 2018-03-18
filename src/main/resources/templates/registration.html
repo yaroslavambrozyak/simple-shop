@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <body>
 <h1 >form</h1>
-<form action="/registrationProcess" th:object="${user}" method="POST">
+<form action="/registration" th:object="${user}" method="POST">
     <div>
         <label>email</label>
         <input th:field="*{email}"/>
@@ -9,6 +9,10 @@
     <div>
         <label >pass</label>
         <input th:field="*{password}"/>
+    </div>
+    <div>
+        <label >pass</label>
+        <input th:field="*{passwordConfirm}"/>
     </div>
     <button type="submit">submit</button>
 </form>

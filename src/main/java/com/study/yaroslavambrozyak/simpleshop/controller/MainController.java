@@ -1,8 +1,9 @@
 package com.study.yaroslavambrozyak.simpleshop.controller;
 
-import com.study.yaroslavambrozyak.simpleshop.SimpleShopApplication;
 import com.study.yaroslavambrozyak.simpleshop.entity.RootCategory;
 import com.study.yaroslavambrozyak.simpleshop.service.MainService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +20,6 @@ public class MainController {
     @GetMapping("/")
     public String index(Model model){
         List<RootCategory> categories = mainService.getRootCategories();
-        categories.forEach(rootCategory ->
-                        rootCategory.setImagePath("/img/"+rootCategory.getImagePath()));
         model.addAttribute("categories",categories);
         return "index";
     }

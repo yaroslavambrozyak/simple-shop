@@ -8,4 +8,6 @@ public interface MainService {
 
     List<RootCategory> getRootCategories();
 
+    void addRootCategory(RootCategory rootCategory);
+
 }

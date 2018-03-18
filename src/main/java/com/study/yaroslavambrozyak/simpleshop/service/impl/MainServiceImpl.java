@@ -6,6 +6,8 @@ import com.study.yaroslavambrozyak.simpleshop.service.MainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,6 @@ import java.util.List;
 @Service
 public class MainServiceImpl implements MainService {
 
-    private Logger logger = LoggerFactory.getLogger(MainServiceImpl.class);
 
     @Autowired
     private RootCategoryRepository rootCategoryRepository;
@@ -22,7 +23,12 @@ public class MainServiceImpl implements MainService {
     @Cacheable(value = "rootCategory")
     @Override
     public List<RootCategory> getRootCategories() {
-        logger.debug("getRoot");
         return rootCategoryRepository.findAll();
+    }
+
+    @CacheEvict(value = "rootCategory",allEntries = true)
+    @Override
+    public void addRootCategory(RootCategory rootCategory) {
+        rootCategoryRepository.save(rootCategory);
     }
 }

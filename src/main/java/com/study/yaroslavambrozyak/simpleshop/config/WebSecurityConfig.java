@@ -1,9 +1,5 @@
 package com.study.yaroslavambrozyak.simpleshop.config;
 
-import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
-import org.apache.tomcat.util.descriptor.web.SecurityCollection;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/admin/*").authenticated();
+        http.authorizeRequests().antMatchers("/admin/*").hasRole("ADMIN");
         http.authorizeRequests().and().formLogin()
                 .loginPage("/login")
                 .usernameParameter("email")
