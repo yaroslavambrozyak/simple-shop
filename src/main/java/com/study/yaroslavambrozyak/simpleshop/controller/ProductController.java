@@ -36,7 +36,9 @@ public class ProductController {
 
     @GetMapping("/product")
     public String getProduct(@RequestParam("id") Long id, Model model) {
-        return null;
+        Product product = productService.getProduct(id);
+        model.addAttribute("product",product);
+        return "product";
     }
 
     private Specification<Product> createSpecification(Long id, String filter) {
