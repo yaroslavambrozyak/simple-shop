@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class MainServiceImpl implements MainService {
 
-
     @Autowired
     private RootCategoryRepository rootCategoryRepository;
 

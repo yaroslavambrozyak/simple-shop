@@ -25,7 +25,7 @@ public class ProductController {
                               @RequestParam(value = "filter", required = false) String filter, Model model) {
         if (filter != null && !filter.isEmpty()) {
             Specification<Product> specification = createSpecification(categoryId, filter);
-            List<Product> products = productService.getFilteredProductsByCategory(categoryId, specification);
+            List<Product> products = productService.getFilteredProductsByCategory(specification);
             model.addAttribute("products", products);
         } else {
             List<Product> products = productService.getProductsByCategory(categoryId);

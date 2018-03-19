@@ -22,4 +22,6 @@ public class CategoryController {
         model.addAttribute("categories",subCategories);
         return "categories";
     }
+
+
 }

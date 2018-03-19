@@ -5,6 +5,9 @@ import com.study.yaroslavambrozyak.simpleshop.dto.UserDTO;
 import com.study.yaroslavambrozyak.simpleshop.service.UserService;
 import com.study.yaroslavambrozyak.simpleshop.validator.RegistrationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +27,11 @@ public class AccountController {
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error",required = false)String error,Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            return "redirect:/";
+        }
         if (error!=null){
             model.addAttribute("err","err");
         }
@@ -37,7 +45,7 @@ public class AccountController {
     }
 
     @PostMapping("/registration")
-    public String registrationProcess(@ModelAttribute("user") RegistrationUserDTO userDTO, BindingResult bindingResult){
+    public String registrationProcess(/*@ModelAttribute("user")*/ RegistrationUserDTO userDTO, BindingResult bindingResult){
         registrationValidator.validate(userDTO,bindingResult);
         if (bindingResult.hasErrors())
             return "registration";

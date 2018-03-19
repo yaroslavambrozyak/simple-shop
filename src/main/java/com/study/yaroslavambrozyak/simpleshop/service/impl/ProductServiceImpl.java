@@ -23,12 +23,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductsByCategory(Long categoryId) {
-        List<Product> products = productRepository.findAllByCategoryId(categoryId);
-        return products;
+        return productRepository.findAllByCategoryId(categoryId);
     }
 
     @Override
-    public List<Product> getFilteredProductsByCategory(Long categoryId, Specification<Product> specification) {
+    public List<Product> getFilteredProductsByCategory(Specification<Product> specification) {
         return productRepository.findAll(specification);
     }
 }

@@ -11,6 +11,6 @@ public interface ProductService {
 
     List<Product> getProductsByCategory(Long categoryId);
 
-    List<Product> getFilteredProductsByCategory(Long categoryId, Specification<Product> specification);
+    List<Product> getFilteredProductsByCategory(Specification<Product> specification);
 
 }

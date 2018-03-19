@@ -16,12 +16,9 @@ public class CacheConfig implements CachingConfigurer {
 
     @Bean(destroyMethod = "shutdown")
     public net.sf.ehcache.CacheManager ehCache(){
-        CacheConfiguration cacheConfiguration = new CacheConfiguration();
-        cacheConfiguration.setName("rootCategory");
-        cacheConfiguration.setMaxEntriesLocalHeap(10);
-        cacheConfiguration.setMemoryStoreEvictionPolicy("LRU");
         net.sf.ehcache.config.Configuration configuration = new net.sf.ehcache.config.Configuration();
-        configuration.addCache(cacheConfiguration);
+        configuration.addCache(createCacheConfiguration("rootCategory",10));
+        configuration.addCache(createCacheConfiguration("subCategories",1000));
         return net.sf.ehcache.CacheManager.newInstance(configuration);
     }
 
@@ -50,5 +47,13 @@ public class CacheConfig implements CachingConfigurer {
     @Override
     public CacheErrorHandler errorHandler() {
         return null;
+    }
+
+    private CacheConfiguration createCacheConfiguration(String name, long maxEntries){
+        CacheConfiguration cacheConfiguration = new CacheConfiguration();
+        cacheConfiguration.setName(name);
+        cacheConfiguration.setMaxEntriesLocalHeap(maxEntries);
+        cacheConfiguration.setMemoryStoreEvictionPolicy("LRU");
+        return cacheConfiguration;
     }
 }
