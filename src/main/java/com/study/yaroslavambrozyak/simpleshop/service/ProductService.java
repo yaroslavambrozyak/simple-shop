@@ -1,6 +1,8 @@
 package com.study.yaroslavambrozyak.simpleshop.service;
 
 import com.study.yaroslavambrozyak.simpleshop.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -9,8 +11,8 @@ public interface ProductService {
 
     Product getProduct(Long id);
 
-    List<Product> getProductsByCategory(Long categoryId);
+    Page<Product> getProductsByCategory(Long categoryId, Pageable pageable);
 
-    List<Product> getFilteredProductsByCategory(Specification<Product> specification);
+    Page<Product> getFilteredProductsByCategory(Specification<Product> specification, Pageable pageable);
 
 }

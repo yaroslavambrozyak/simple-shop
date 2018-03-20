@@ -5,21 +5,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import java.util.Set;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Getter
 @Setter
-public class Role {
+public class Characteristics {
 
     @Id
-    @GeneratedValue
     private Long id;
-    private String roleName;
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private String characteristicsKey;
+    private String characteristicsValue;
+    @ManyToOne
+    private Product product;
 
 }

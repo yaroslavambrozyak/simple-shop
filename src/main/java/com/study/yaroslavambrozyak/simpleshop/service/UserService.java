@@ -1,7 +1,6 @@
 package com.study.yaroslavambrozyak.simpleshop.service;
 
 import com.study.yaroslavambrozyak.simpleshop.dto.RegistrationUserDTO;
-import com.study.yaroslavambrozyak.simpleshop.dto.UserDTO;
 import com.study.yaroslavambrozyak.simpleshop.entity.User;
 
 public interface UserService {

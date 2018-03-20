@@ -5,6 +5,8 @@ import com.study.yaroslavambrozyak.simpleshop.exception.NotFoundException;
 import com.study.yaroslavambrozyak.simpleshop.repository.ProductRepository;
 import com.study.yaroslavambrozyak.simpleshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +24,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCategory(Long categoryId) {
-        return productRepository.findAllByCategoryId(categoryId);
+    public Page<Product> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findAllByCategoryId(categoryId,pageable);
     }
 
     @Override
-    public List<Product> getFilteredProductsByCategory(Specification<Product> specification) {
-        return productRepository.findAll(specification);
+    public Page<Product> getFilteredProductsByCategory(Specification<Product> specification, Pageable pageable) {
+        return productRepository.findAll(specification,pageable);
     }
 }

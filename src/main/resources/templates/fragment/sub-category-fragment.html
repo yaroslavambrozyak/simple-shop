@@ -1,0 +1,15 @@
+<div class="container-fluid" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="row">
+        <div th:each="category : ${categories}" class="col-lg-4 col-md-6 col-sm-12">
+            <div class="card">
+                <a class="ajax-url" ><img class="card-img-top"
+                                          th:src="${category.imagePath}"
+                                          alt="Card image cap"></a>
+                <div class="card-body">
+                    <a class="ajax-url" th:href="@{/products?id=}+${category.id}"><p class="card-text" th:text="${category.name}">
+                        Category Name</p></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

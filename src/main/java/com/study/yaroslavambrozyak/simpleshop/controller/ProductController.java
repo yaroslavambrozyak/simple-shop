@@ -2,14 +2,21 @@ package com.study.yaroslavambrozyak.simpleshop.controller;
 
 import com.study.yaroslavambrozyak.simpleshop.entity.Product;
 import com.study.yaroslavambrozyak.simpleshop.service.ProductService;
+import com.study.yaroslavambrozyak.simpleshop.util.AjaxUtil;
 import com.study.yaroslavambrozyak.simpleshop.util.ProductSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,18 +27,20 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    // Pageable throws error ??????????
     @GetMapping("/products")
-    public String getProducts(@RequestParam("id") Long categoryId,
-                              @RequestParam(value = "filter", required = false) String filter, Model model) {
+    public String getProducts(@RequestParam(value = "id") Long categoryId,
+                              @RequestParam(value = "filter", required = false) String filter, HttpServletRequest request,
+                              Model model) {
         if (filter != null && !filter.isEmpty()) {
             Specification<Product> specification = createSpecification(categoryId, filter);
-            List<Product> products = productService.getFilteredProductsByCategory(specification);
-            model.addAttribute("products", products);
+            Page<Product> products = productService.getFilteredProductsByCategory(specification,PageRequest.of(0,2));
+            model.addAttribute("products", products.getContent());
         } else {
-            List<Product> products = productService.getProductsByCategory(categoryId);
-            model.addAttribute("products", products);
+            Page<Product> products = productService.getProductsByCategory(categoryId,PageRequest.of(0,2));
+            model.addAttribute("products", products.getContent());
         }
-        return "products";
+        return AjaxUtil.isAjax(request)?"/fragment/products-fragment":"products";
     }
 
     @GetMapping("/product")
