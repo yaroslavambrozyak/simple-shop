@@ -25,14 +25,14 @@ public class RegistrationValidator implements Validator {
     public void validate(@Nullable Object o, Errors errors) {
         RegistrationUserDTO userDTO = (RegistrationUserDTO) o;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"email","NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"email","validation.empty");
         if (userService.findUserByEmail(userDTO.getEmail())!=null)
-            errors.rejectValue("email","duplicate");
+            errors.rejectValue("email","validation.registration.email.duplicate");
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"password","NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"password","validation.empty");
         if (userDTO.getPassword().length()<8 || userDTO.getPassword().length()>32)
-            errors.rejectValue("password","length");
+            errors.rejectValue("password","validation.registration.password.length");
         if (!userDTO.getPassword().equals(userDTO.getPasswordConfirm()))
-            errors.rejectValue("passwordConfirm","not eq");
+            errors.rejectValue("passwordConfirm","validation.registration.password.equality");
     }
 }

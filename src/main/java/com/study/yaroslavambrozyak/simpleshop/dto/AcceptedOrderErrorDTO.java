@@ -1,4 +1,4 @@
-package com.study.yaroslavambrozyak.simpleshop.util;
+package com.study.yaroslavambrozyak.simpleshop.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchCriteria {
-    private String key;
-    private String operation;
-    private Object value;
+public class AcceptedOrderErrorDTO {
+    private String productName;
 }

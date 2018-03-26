@@ -1,5 +1,6 @@
 package com.study.yaroslavambrozyak.simpleshop.service.impl;
 
+import com.study.yaroslavambrozyak.simpleshop.dto.AcceptedOrderErrorDTO;
 import com.study.yaroslavambrozyak.simpleshop.dto.OrderedProductDTO;
 import com.study.yaroslavambrozyak.simpleshop.entity.Order;
 import com.study.yaroslavambrozyak.simpleshop.entity.OrderedProduct;
@@ -32,20 +33,30 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAllByUser_Email(email);
     }
 
-    // TODO logic? checks? O_o
     @Override
-    public void makeOrder(List<OrderedProductDTO> orderedProductsDTO) {
+    public List<AcceptedOrderErrorDTO> makeOrder(List<OrderedProductDTO> orderedProductsDTO) {
+        List<AcceptedOrderErrorDTO> acceptedOrderDTOs = new ArrayList<>();
         List<OrderedProduct> orderedProducts = new ArrayList<>();
         orderedProductsDTO.forEach(orderedProductDTO -> {
             OrderedProduct orderedProduct = new OrderedProduct();
-            orderedProduct.setProduct(productService.getProduct(orderedProductDTO.getProductId()));
+            Product product = null;
+            try {
+                product = productService.getProductForOrder(orderedProductDTO.getProductId()
+                        , orderedProductDTO.getQuantity());
+            } catch (Exception e) {
+                acceptedOrderDTOs.add(new AcceptedOrderErrorDTO(orderedProductDTO.getName()));
+            }
+            orderedProduct.setProduct(product);
             orderedProduct.setQuantity(orderedProductDTO.getQuantity());
+            orderedProducts.add(orderedProduct);
         });
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByEmail(userEmail);
         Order order = new Order();
         order.setOrderedProductList(orderedProducts);
         order.setUser(user);
-        orderRepository.save(order);
+        if (acceptedOrderDTOs.size() == 0)
+            orderRepository.save(order);
+        return acceptedOrderDTOs;
     }
 }

@@ -11,6 +11,8 @@ public interface ProductService {
 
     Product getProduct(Long id);
 
+    Product getProductForOrder(Long id, Integer quantity) throws Exception;
+
     Page<Product> getProductsByCategory(Long categoryId, Pageable pageable);
 
     Page<Product> getFilteredProductsByCategory(Specification<Product> specification, Pageable pageable);

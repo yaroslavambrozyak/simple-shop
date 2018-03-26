@@ -5,8 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrderedProductDTO {
-    private Long productId;
-    private String name;
-    private Integer quantity;
+public class PasswordResetDTO {
+
+    private String password;
+    private String passwordConfirm;
+
 }

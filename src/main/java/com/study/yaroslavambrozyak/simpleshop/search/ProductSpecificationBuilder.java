@@ -1,8 +1,7 @@
-package com.study.yaroslavambrozyak.simpleshop.util;
+package com.study.yaroslavambrozyak.simpleshop.search;
 
 import com.study.yaroslavambrozyak.simpleshop.entity.Product;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.ArrayList;
 import java.util.List;

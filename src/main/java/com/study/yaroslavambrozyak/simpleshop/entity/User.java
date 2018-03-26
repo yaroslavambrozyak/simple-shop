@@ -20,6 +20,8 @@ public class User {
     private Long id;
     private String email;
     private String password;
+    @OneToOne(mappedBy = "user")
+    private PasswordResetToken passwordResetToken;
     @ManyToMany
     @JoinTable(
             name = "users_roles",

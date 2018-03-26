@@ -3,21 +3,17 @@ package com.study.yaroslavambrozyak.simpleshop.controller;
 import com.study.yaroslavambrozyak.simpleshop.entity.Product;
 import com.study.yaroslavambrozyak.simpleshop.service.ProductService;
 import com.study.yaroslavambrozyak.simpleshop.util.AjaxUtil;
-import com.study.yaroslavambrozyak.simpleshop.util.ProductSpecificationBuilder;
+import com.study.yaroslavambrozyak.simpleshop.search.ProductSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
