@@ -12,7 +12,7 @@ import org.springframework.lang.Nullable;
 
 @Configuration
 @EnableCaching
-public class CacheConfig implements CachingConfigurer {
+public class CacheConfig{
 
     @Bean(destroyMethod = "shutdown")
     public net.sf.ehcache.CacheManager ehCache(){
@@ -20,33 +20,6 @@ public class CacheConfig implements CachingConfigurer {
         configuration.addCache(createCacheConfiguration("rootCategory",10));
         configuration.addCache(createCacheConfiguration("subCategories",1000));
         return net.sf.ehcache.CacheManager.newInstance(configuration);
-    }
-
-    @Bean
-    @Nullable
-    @Override
-    public CacheManager cacheManager() {
-        return new EhCacheCacheManager(ehCache());
-    }
-
-    @Nullable
-    @Override
-    public CacheResolver cacheResolver() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public KeyGenerator keyGenerator() {
-        return null;
-    }
-
-
-    @Bean
-    @Nullable
-    @Override
-    public CacheErrorHandler errorHandler() {
-        return null;
     }
 
     private CacheConfiguration createCacheConfiguration(String name, long maxEntries){

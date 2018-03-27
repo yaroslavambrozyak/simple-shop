@@ -1,16 +1,10 @@
 package com.study.yaroslavambrozyak.simpleshop.config;
 
-import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
-import org.apache.tomcat.util.descriptor.web.SecurityCollection;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,14 +30,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
     }
 
-    @Bean
-    @Autowired
-    public DaoAuthenticationProvider authenticationProvider(
-            @Qualifier("userServiceImpl") UserDetailsService userDetailsService){
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userDetailsService);
-        auth.setPasswordEncoder(passwordEncoder());
-        return auth;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -74,4 +68,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         return connector;
     }*/
+
+
 }

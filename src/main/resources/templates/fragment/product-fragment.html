@@ -1,7 +1,21 @@
-<div class="container-fluid">
+<div class="container-fluid" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="row">
         <div class="col-lg-6 col-sm-12">
-
+            <div th:each="image : ${product.images}">
+                <img src="${image.path}">
+            </div>
+            <div>
+                <h3 th:text="${image.name}"></h3>
+                <p th:text="${image.description}"></p>
+            </div>
+            <table>
+                <th:block th:each="characteristic : ${product.characteristics}">
+                    <tr>
+                        <td th:text="${characterictic.characteristicsKey}">...</td>
+                        <td th:text="${characterictic.characteristicsValue}">...</td>
+                    </tr>
+                </th:block>
+            </table>
         </div>
     </div>
 </div>

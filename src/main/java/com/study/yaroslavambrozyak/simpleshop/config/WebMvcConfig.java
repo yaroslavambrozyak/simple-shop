@@ -1,6 +1,6 @@
 package com.study.yaroslavambrozyak.simpleshop.config;
 
-import com.study.yaroslavambrozyak.simpleshop.interceptor.MainInterceptor;
+import com.study.yaroslavambrozyak.simpleshop.interceptor.UserInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -30,7 +30,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new MainInterceptor());
+        registry.addInterceptor(new UserInterceptor());
         registry.addInterceptor(localeChangeInterceptor());
     }
 
@@ -56,4 +56,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         resourceBundleMessageSource.setDefaultEncoding("UTF-8");
         return resourceBundleMessageSource;
     }*/
+
+
 }

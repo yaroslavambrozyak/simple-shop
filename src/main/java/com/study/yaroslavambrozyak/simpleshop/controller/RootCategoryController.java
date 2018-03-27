@@ -1,22 +1,21 @@
 package com.study.yaroslavambrozyak.simpleshop.controller;
 
 import com.study.yaroslavambrozyak.simpleshop.entity.RootCategory;
-import com.study.yaroslavambrozyak.simpleshop.service.MainService;
+import com.study.yaroslavambrozyak.simpleshop.service.RootCategoryService;
 import com.study.yaroslavambrozyak.simpleshop.util.AjaxUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-public class MainController {
+public class RootCategoryController {
 
     @Autowired
-    private MainService mainService;
+    private RootCategoryService mainService;
 
     @GetMapping("/")
     public String index(HttpServletRequest request, Model model){

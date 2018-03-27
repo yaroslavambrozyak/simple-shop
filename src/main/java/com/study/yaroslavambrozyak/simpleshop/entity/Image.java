@@ -6,20 +6,17 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import java.util.Date;
-
+import javax.persistence.ManyToOne;
 
 @Entity
-@Getter
 @Setter
-public class PasswordResetToken {
+@Getter
+public class Image {
 
     @Id
     @GeneratedValue
     private Long id;
-    @OneToOne
-    private User user;
-    private String token;
-    private Date expiryDate;
+    private String path;
+    @ManyToOne
+    private Product product;
 }

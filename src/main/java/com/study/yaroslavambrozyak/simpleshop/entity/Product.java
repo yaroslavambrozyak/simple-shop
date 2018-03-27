@@ -23,6 +23,8 @@ public class Product {
     private Integer quantity;
     @OneToMany(mappedBy = "product")
     private List<Characteristics> characteristics;
+    @OneToMany(mappedBy = "product")
+    private List<Image> images;
     @ManyToOne
     private SubCategory category;
 }

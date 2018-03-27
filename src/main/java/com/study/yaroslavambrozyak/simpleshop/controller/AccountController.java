@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 
@@ -76,31 +78,40 @@ public class AccountController {
 
     @GetMapping("/resetPassword")
     public String resetPassword() {
-        return null;
+        return "reset-password-email-form";
     }
 
     @PostMapping("/resetPassword")
-    public void resetPasswordProcess(String email, HttpServletRequest request) {
+    public String resetPasswordProcess(String email, HttpServletRequest request) {
         User user = userService.findUserByEmail(email);
         String token = UUID.randomUUID().toString();
         passwordResetTokenService.create(user, token);
         emailService.sendMessage(user.getEmail(), prepareResetPasswordText(request.getContextPath(), user.getId(), token));
+        return "redirect:/resetEmail";
+    }
+
+    @GetMapping("/resetEmail")
+    public String resetEmail(){
+        return "reset-password-email-send";
     }
 
     @GetMapping("/reset")
-    public String resetPassword(@RequestParam("id") Long id, @RequestParam("token") String token) {
+    public String resetPassword(Model model,@RequestParam("id") Long id, @RequestParam("token") String token) {
         boolean isValid = passwordResetTokenValidator.validate(id, token);
         if(!isValid)
-            return null;
-        return "redirect:/";
+            return "reset-password-token-fail";
+        model.addAttribute("change",new PasswordResetDTO());
+        return "reset-password-new-password";
     }
 
     @PostMapping("/savePassword")
-    public String savePassword(PasswordResetDTO passwordResetDTO,BindingResult bindingResult){
+    public String savePassword(PasswordResetDTO passwordResetDTO, BindingResult bindingResult, HttpServletRequest request,
+                               HttpServletResponse response){
         passwordResetValidator.validate(passwordResetDTO,bindingResult);
         if (bindingResult.hasErrors())
-            return "null";
+            return "reset-password-new-password";
         userService.changePassword(passwordResetDTO.getPassword());
+        logout(request,response);
         return "redirect:/login";
     }
 
@@ -113,5 +124,13 @@ public class AccountController {
         String preUrl = "lalala click url lalala";
         String url = contextPath + "/reset?id=" + id + "&token=" + token;
         return preUrl + "\n" + url;
+    }
+
+    private void logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 }

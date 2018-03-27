@@ -1,12 +1,14 @@
 package com.study.yaroslavambrozyak.simpleshop.controller;
 
-import com.study.yaroslavambrozyak.simpleshop.entity.RootCategory;
-import com.study.yaroslavambrozyak.simpleshop.service.MainService;
+import com.study.yaroslavambrozyak.simpleshop.dto.RootCategoryDTO;
+import com.study.yaroslavambrozyak.simpleshop.service.RootCategoryService;
+import com.study.yaroslavambrozyak.simpleshop.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import java.io.IOException;
 
 
 @Controller
@@ -14,17 +16,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AdminController {
 
     @Autowired
-    private MainService mainService;
+    private RootCategoryService rootCategoryService;
+    @Autowired
+    private ImageUtil imageUtil;
 
-    @GetMapping("/test")
-    @ResponseBody
-    public String test(){
-        RootCategory rootCategory = new RootCategory();
-        rootCategory.setName("cached");
-        rootCategory.setImagePath("qweqweqweqwe");
-        mainService.addRootCategory(rootCategory);
-        return "admin page";
+    @PostMapping("/root")
+    public String addRootCategory(RootCategoryDTO rootCategoryDTO, CommonsMultipartFile image) throws IOException {
+        String path = imageUtil.saveImage(image);
+        rootCategoryService.addRootCategory(rootCategoryDTO,path);
+        return null;
     }
+
+    @PutMapping("/root")
+    public String updateRootCategory(RootCategoryDTO rootCategoryDTO){
+        rootCategoryService.updateRootCategory(rootCategoryDTO);
+        return null;
+    }
+
+    @DeleteMapping("/root")
+    public String deleteRootCategory(@RequestParam("id") Long id){
+        rootCategoryService.deleteRootCategory(id);
+        return null;
+    }
+
+    @ExceptionHandler(value = IOException.class)
+    public String excHandler(){
+        return null;
+    }
+
 
 
 }

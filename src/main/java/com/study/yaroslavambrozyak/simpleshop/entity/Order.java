@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Table(name="user_order")
 public class Order {
 
     @Id
