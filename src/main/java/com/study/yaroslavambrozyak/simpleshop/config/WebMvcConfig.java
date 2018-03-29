@@ -1,8 +1,10 @@
 package com.study.yaroslavambrozyak.simpleshop.config;
 
 import com.study.yaroslavambrozyak.simpleshop.interceptor.UserInterceptor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -20,12 +22,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/img/**").addResourceLocations("file:" + UPLOAD_DIR);
-        registry.addResourceHandler(
-                "/css/**",
-                "/js/**")
-                .addResourceLocations(
-                        "classpath:/static/css/",
-                        "classpath:/static/js/");
+        registry.addResourceHandler("/css/**", "/js/**")
+                .addResourceLocations("classpath:/static/css/", "classpath:/static/js/");
     }
 
     @Override
@@ -48,11 +46,10 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         return interceptor;
     }
 
-    // ??????????????? Doesn`t work?????????
     /*@Bean
     public MessageSource messageSources(){
         ReloadableResourceBundleMessageSource resourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-        resourceBundleMessageSource.setBasename("messages");
+        resourceBundleMessageSource.setBasename("message");
         resourceBundleMessageSource.setDefaultEncoding("UTF-8");
         return resourceBundleMessageSource;
     }*/

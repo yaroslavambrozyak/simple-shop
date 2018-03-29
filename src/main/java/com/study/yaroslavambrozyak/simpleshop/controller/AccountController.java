@@ -10,6 +10,8 @@ import com.study.yaroslavambrozyak.simpleshop.validator.PasswordResetTokenValida
 import com.study.yaroslavambrozyak.simpleshop.validator.PasswordResetValidator;
 import com.study.yaroslavambrozyak.simpleshop.validator.RegistrationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,18 +34,28 @@ import java.util.UUID;
 @Controller
 public class AccountController {
 
+    private final UserService userService;
+    private final RegistrationValidator registrationValidator;
+    private final EmailService emailService;
+    private final PasswordResetTokenValidator passwordResetTokenValidator;
+    private final PasswordResetTokenService passwordResetTokenService;
+    private final PasswordResetValidator passwordResetValidator;
+    private final MessageSource messageSource;
+
+
     @Autowired
-    private UserService userService;
-    @Autowired
-    private RegistrationValidator registrationValidator;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private PasswordResetTokenValidator passwordResetTokenValidator;
-    @Autowired
-    private PasswordResetTokenService passwordResetTokenService;
-    @Autowired
-    private PasswordResetValidator passwordResetValidator;
+    public AccountController(UserService userService, RegistrationValidator registrationValidator,
+                             EmailService emailService, PasswordResetTokenValidator passwordResetTokenValidator,
+                             PasswordResetTokenService passwordResetTokenService,
+                             PasswordResetValidator passwordResetValidator, MessageSource messageSource) {
+        this.userService = userService;
+        this.registrationValidator = registrationValidator;
+        this.emailService = emailService;
+        this.passwordResetTokenValidator = passwordResetTokenValidator;
+        this.passwordResetTokenService = passwordResetTokenService;
+        this.passwordResetValidator = passwordResetValidator;
+        this.messageSource = messageSource;
+    }
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -86,33 +99,31 @@ public class AccountController {
         User user = userService.findUserByEmail(email);
         String token = UUID.randomUUID().toString();
         passwordResetTokenService.create(user, token);
-        emailService.sendMessage(user.getEmail(), prepareResetPasswordText(request.getContextPath(), user.getId(), token));
+        emailService.sendMessage(user.getEmail(), prepareResetPasswordText(user.getId(), token));
         return "redirect:/resetEmail";
     }
 
     @GetMapping("/resetEmail")
-    public String resetEmail(){
+    public String resetEmail() {
         return "reset-password-email-send";
     }
 
     @GetMapping("/reset")
-    public String resetPassword(Model model,@RequestParam("id") Long id, @RequestParam("token") String token) {
+    public String resetPassword(Model model, @RequestParam("id") Long id, @RequestParam("token") String token) {
         boolean isValid = passwordResetTokenValidator.validate(id, token);
-        if(!isValid)
+        if (!isValid)
             return "reset-password-token-fail";
-        model.addAttribute("change",new PasswordResetDTO());
+        model.addAttribute("change", new PasswordResetDTO());
         return "reset-password-new-password";
     }
 
     @PostMapping("/savePassword")
-    public String savePassword(PasswordResetDTO passwordResetDTO, BindingResult bindingResult, HttpServletRequest request,
-                               HttpServletResponse response){
-        passwordResetValidator.validate(passwordResetDTO,bindingResult);
+    public String savePassword(PasswordResetDTO passwordResetDTO, BindingResult bindingResult) {
+        passwordResetValidator.validate(passwordResetDTO, bindingResult);
         if (bindingResult.hasErrors())
             return "reset-password-new-password";
         userService.changePassword(passwordResetDTO.getPassword());
-        logout(request,response);
-        return "redirect:/login";
+        return "redirect:/";
     }
 
     private boolean isAnonymous() {
@@ -120,17 +131,11 @@ public class AccountController {
         return authentication instanceof AnonymousAuthenticationToken;
     }
 
-    private String prepareResetPasswordText(String contextPath, Long id, String token) {
-        String preUrl = "lalala click url lalala";
-        String url = contextPath + "/reset?id=" + id + "&token=" + token;
-        return preUrl + "\n" + url;
+    private String prepareResetPasswordText(Long id, String token) {
+        String url = "/reset?id=" + id + "&token=" + token;
+        return messageSource.getMessage("reset-password.email"
+                ,new Object[]{url}, LocaleContextHolder.getLocale());
     }
 
-    private void logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        SecurityContextHolder.getContext().setAuthentication(null);
-    }
+
 }

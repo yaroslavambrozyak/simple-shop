@@ -15,8 +15,12 @@ import java.util.List;
 @Controller
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/category")
     public String getSubCategories(@RequestParam("id") Long id, HttpServletRequest request, Model model){

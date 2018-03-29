@@ -1,6 +1,8 @@
 package com.study.yaroslavambrozyak.simpleshop.service;
 
+import com.study.yaroslavambrozyak.simpleshop.dto.ProductDTO;
 import com.study.yaroslavambrozyak.simpleshop.entity.Product;
+import com.study.yaroslavambrozyak.simpleshop.exception.NotEnoughException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,10 +13,14 @@ public interface ProductService {
 
     Product getProduct(Long id);
 
-    Product getProductForOrder(Long id, Integer quantity) throws Exception;
+    Product getProductForOrder(Long id, Integer quantity) throws NotEnoughException;
 
     Page<Product> getProductsByCategory(Long categoryId, Pageable pageable);
 
     Page<Product> getFilteredProductsByCategory(Specification<Product> specification, Pageable pageable);
+
+    void subtractQuantity(Product product,int quantity);
+
+    void addProduct(ProductDTO productDTO,List<String> imagePaths);
 
 }

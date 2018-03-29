@@ -9,6 +9,8 @@ public interface RootCategoryService {
 
     List<RootCategory> getRootCategories();
 
+    RootCategory getRootCategory(Long id);
+
     void addRootCategory(RootCategoryDTO rootCategory, String imagePath);
 
     void updateRootCategory(RootCategoryDTO rootCategoryDTO);

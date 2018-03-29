@@ -14,7 +14,7 @@ public class OrderedProduct {
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="product_id")
     private Product product;
     private Integer quantity;

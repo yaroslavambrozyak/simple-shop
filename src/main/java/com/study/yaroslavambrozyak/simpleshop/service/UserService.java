@@ -5,6 +5,8 @@ import com.study.yaroslavambrozyak.simpleshop.entity.User;
 
 public interface UserService {
 
+    User getCurrentUser();
+
     User findUserByEmail(String email);
 
     void register(RegistrationUserDTO userDTO);

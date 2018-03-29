@@ -1,6 +1,5 @@
 package com.study.yaroslavambrozyak.simpleshop.controller;
 
-import com.study.yaroslavambrozyak.simpleshop.dto.AcceptedOrderErrorDTO;
 import com.study.yaroslavambrozyak.simpleshop.dto.OrderedProductDTO;
 import com.study.yaroslavambrozyak.simpleshop.entity.Order;
 import com.study.yaroslavambrozyak.simpleshop.service.OrderService;
@@ -15,8 +14,12 @@ import java.util.List;
 @Controller
 public class OrderController {
 
+    private final OrderService orderService;
+
     @Autowired
-    private OrderService orderService;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
 
     @GetMapping("/order")
@@ -27,10 +30,9 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    public String makeOrder(List<OrderedProductDTO> orderedProducts, Model model) {
-        List<AcceptedOrderErrorDTO> orderedResult = orderService.makeOrder(orderedProducts);
-        if (orderedResult.size() > 0)
-            model.addAttribute("ordered", orderedResult);
+    public String makeOrder(OrderedProductDTO orderedProducts, Model model) {
+        String status = orderService.makeOrder(orderedProducts);
+        model.addAttribute("status",status);
         return null;
     }
 

@@ -14,8 +14,12 @@ import java.util.List;
 @Controller
 public class RootCategoryController {
 
+    private final RootCategoryService mainService;
+
     @Autowired
-    private RootCategoryService mainService;
+    public RootCategoryController(RootCategoryService mainService) {
+        this.mainService = mainService;
+    }
 
     @GetMapping("/")
     public String index(HttpServletRequest request, Model model){

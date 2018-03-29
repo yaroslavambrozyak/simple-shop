@@ -32,28 +32,36 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private PasswordResetTokenService passwordResetTokenService;
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper,
+                           PasswordEncoder passwordEncoder, RoleService roleService) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
+    }
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(NotFoundException::new);
+        User user = this.findUserByEmail(email);
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword()
                 , getGrantedAuthorities(user.getRoles()));
     }
 
     @Override
+    public User getCurrentUser() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.findUserByEmail(userDetails.getUsername());
+    }
+
+    @Override
     public User findUserByEmail(String email) {
-        return userRepository.getUserByEmail(email);
+        return userRepository.findByEmail(email).orElseThrow(NotFoundException::new);
     }
 
     @Override

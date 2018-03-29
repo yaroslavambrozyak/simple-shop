@@ -13,9 +13,13 @@ import java.util.Date;
 @Service
 public class PasswordResetTokenServiceImpl implements PasswordResetTokenService {
 
-    @Autowired
-    private PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private static final int EXPIRATION = 600000; //10 min
+
+    @Autowired
+    public PasswordResetTokenServiceImpl(PasswordResetTokenRepository passwordResetTokenRepository) {
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+    }
 
     @Transactional
     @Override

@@ -19,6 +19,6 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(mappedBy = "product")
-    private List<OrderedProduct> orderedProductList;
+    @OneToOne(mappedBy = "product")
+    private OrderedProduct orderedProduct;
 }
