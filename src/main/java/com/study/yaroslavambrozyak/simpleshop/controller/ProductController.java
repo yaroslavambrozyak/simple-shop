@@ -20,7 +20,8 @@ import java.util.regex.Pattern;
 @Controller
 public class ProductController {
 
-    private final ProductService productService;
+    private ProductService productService;
+    private final int DEFAULT_SIZE = 10;
 
     @Autowired
     public ProductController(ProductService productService) {
@@ -30,23 +31,26 @@ public class ProductController {
     // Pageable throws error ??????????
     @GetMapping("/products")
     public String getProducts(@RequestParam(value = "id") Long categoryId,
-                              @RequestParam(value = "filter", required = false) String filter, HttpServletRequest request,
-                              Model model) {
+                              @RequestParam(value = "filter", required = false) String filter,
+                              @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                              HttpServletRequest request, Model model) {
         if (filter != null && !filter.isEmpty()) {
             Specification<Product> specification = createSpecification(categoryId, filter);
-            Page<Product> products = productService.getFilteredProductsByCategory(specification,PageRequest.of(0,2));
+            Page<Product> products = productService
+                    .getFilteredProductsByCategory(specification, PageRequest.of(page, DEFAULT_SIZE));
             model.addAttribute("products", products.getContent());
         } else {
-            Page<Product> products = productService.getProductsByCategory(categoryId,PageRequest.of(0,2));
+            Page<Product> products = productService
+                    .getProductsByCategory(categoryId, PageRequest.of(page, DEFAULT_SIZE));
             model.addAttribute("products", products.getContent());
         }
-        return AjaxUtil.isAjax(request)?"/fragment/products-fragment":"products";
+        return AjaxUtil.isAjax(request) ? "/fragment/products-fragment" : "products";
     }
 
     @GetMapping("/product")
     public String getProduct(@RequestParam("id") Long id, Model model) {
         Product product = productService.getProduct(id);
-        model.addAttribute("product",product);
+        model.addAttribute("product", product);
         return "product";
     }
 
@@ -56,7 +60,7 @@ public class ProductController {
         ProductSpecificationBuilder builder = new ProductSpecificationBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
         Matcher matcher = pattern.matcher(filter + ",");
-        builder.with(categoryId,operationEqual,id);
+        builder.with(categoryId, operationEqual, id);
         while (matcher.find()) {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }

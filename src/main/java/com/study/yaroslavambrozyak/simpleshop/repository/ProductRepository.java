@@ -11,12 +11,13 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.LockModeType;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product,Long>,JpaSpecificationExecutor<Product> {
 
     Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Product findProductById(Long id);
+    Optional<Product> findProductById(Long id);
 
 }

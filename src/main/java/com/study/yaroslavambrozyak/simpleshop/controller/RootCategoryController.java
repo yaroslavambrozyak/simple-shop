@@ -14,7 +14,7 @@ import java.util.List;
 @Controller
 public class RootCategoryController {
 
-    private final RootCategoryService mainService;
+    private RootCategoryService mainService;
 
     @Autowired
     public RootCategoryController(RootCategoryService mainService) {

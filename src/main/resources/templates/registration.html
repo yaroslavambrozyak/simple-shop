@@ -14,10 +14,10 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-6">
-                            <a href="#" class="active" id="login-form-link">Login</a>
+                            <a href="/login" class="active" id="login-form-link">Login</a>
                         </div>
                         <div class="col-xs-6">
-                            <a href="#" id="register-form-link">Register</a>
+                            <a href="/registration" id="register-form-link">Register</a>
                         </div>
                     </div>
                     <hr>
@@ -29,17 +29,17 @@
                                   role="form" style="display: block;">
                                 <div class="form-group">
                                     <input type="email" name="email" id="email" class="form-control"
-                                           placeholder="Email Address" value="" th:field="*{email}">
+                                           placeholder="Email Address" value="" th:placeholder="#{email}" th:field="*{email}">
                                     <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name Error</td>
                                 </div>
                                 <div class="form-group">
                                     <input type="password" name="password" id="password"
-                                           class="form-control" placeholder="Password" th:field="*{password}">
+                                           class="form-control" placeholder="Password" th:placeholder="#{password}" th:field="*{password}">
                                     <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</td>
                                 </div>
                                 <div class="form-group">
                                     <input type="password" name="passwordConfirm" id="confirm-password"
-                                           class="form-control" placeholder="Confirm Password" th:field="*{passwordConfirm}">
+                                           class="form-control" placeholder="Confirm Password" th:placeholder="#{password-confirm}" th:field="*{passwordConfirm}">
                                     <td th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">Name Error</td>
                                 </div>
                                 <div class="form-group">
@@ -47,7 +47,7 @@
                                         <div class="col-sm-6 col-sm-offset-3">
                                             <input type="submit" name="register-submit" id="register-submit"
                                                    class="form-control btn btn-register"
-                                                   value="Register Now">
+                                                   th:value="#{register}" value="Register Now">
                                         </div>
                                     </div>
                                 </div>

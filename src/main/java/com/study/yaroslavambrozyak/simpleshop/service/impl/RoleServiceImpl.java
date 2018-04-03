@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private final RoleRepository roleRepository;
+    private RoleRepository roleRepository;
     private final String DEFAULT_ROLE_NAME = "ROLE_USER";
 
     @Autowired

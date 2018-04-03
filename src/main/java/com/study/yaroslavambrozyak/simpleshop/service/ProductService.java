@@ -6,6 +6,7 @@ import com.study.yaroslavambrozyak.simpleshop.exception.NotEnoughException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public interface ProductService {
 
     void subtractQuantity(Product product,int quantity);
 
-    void addProduct(ProductDTO productDTO,List<String> imagePaths);
+    void addProduct(ProductDTO productDTO,CommonsMultipartFile[] imagePaths);
+
+    void deleteProduct(Long id);
 
 }

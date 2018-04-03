@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
+    private UserRepository userRepository;
+    private ModelMapper modelMapper;
+    private PasswordEncoder passwordEncoder;
+    private RoleService roleService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper,

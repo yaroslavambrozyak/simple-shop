@@ -2,6 +2,7 @@ package com.study.yaroslavambrozyak.simpleshop.service;
 
 import com.study.yaroslavambrozyak.simpleshop.dto.RootCategoryDTO;
 import com.study.yaroslavambrozyak.simpleshop.entity.RootCategory;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface RootCategoryService {
 
     RootCategory getRootCategory(Long id);
 
-    void addRootCategory(RootCategoryDTO rootCategory, String imagePath);
+    void addRootCategory(RootCategoryDTO rootCategory, CommonsMultipartFile image);
 
     void updateRootCategory(RootCategoryDTO rootCategoryDTO);
 

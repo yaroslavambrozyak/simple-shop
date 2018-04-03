@@ -46,13 +46,4 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         return interceptor;
     }
 
-    /*@Bean
-    public MessageSource messageSources(){
-        ReloadableResourceBundleMessageSource resourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-        resourceBundleMessageSource.setBasename("message");
-        resourceBundleMessageSource.setDefaultEncoding("UTF-8");
-        return resourceBundleMessageSource;
-    }*/
-
-
 }

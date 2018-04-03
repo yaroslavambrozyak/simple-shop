@@ -17,6 +17,7 @@ public class Image {
     @GeneratedValue
     private Long id;
     private String path;
+    private Integer position;
     @ManyToOne
     private Product product;
 }

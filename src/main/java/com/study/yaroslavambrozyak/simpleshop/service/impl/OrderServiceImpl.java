@@ -21,9 +21,9 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderRepository orderRepository;
-    private final ProductService productService;
-    private final UserService userService;
+    private OrderRepository orderRepository;
+    private ProductService productService;
+    private UserService userService;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, ProductService productService,
@@ -36,11 +36,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     @Override
     public List<Order> getUserOrder() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = userService.getCurrentUser().getEmail();
         return orderRepository.findAllByUser_Email(email);
     }
 
-    //??
     @Override
     public String makeOrder(OrderedProductDTO orderedProductDTO) {
         try {

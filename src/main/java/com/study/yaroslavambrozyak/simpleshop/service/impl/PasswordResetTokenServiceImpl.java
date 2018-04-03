@@ -2,6 +2,7 @@ package com.study.yaroslavambrozyak.simpleshop.service.impl;
 
 import com.study.yaroslavambrozyak.simpleshop.entity.PasswordResetToken;
 import com.study.yaroslavambrozyak.simpleshop.entity.User;
+import com.study.yaroslavambrozyak.simpleshop.exception.PasswordTokenException;
 import com.study.yaroslavambrozyak.simpleshop.repository.PasswordResetTokenRepository;
 import com.study.yaroslavambrozyak.simpleshop.service.PasswordResetTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.Date;
 @Service
 public class PasswordResetTokenServiceImpl implements PasswordResetTokenService {
 
-    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private PasswordResetTokenRepository passwordResetTokenRepository;
     private static final int EXPIRATION = 600000; //10 min
 
     @Autowired
@@ -21,7 +22,6 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
-    @Transactional
     @Override
     public void create(User user, String token) {
         PasswordResetToken passwordResetToken = new PasswordResetToken();
@@ -32,9 +32,9 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         passwordResetTokenRepository.save(passwordResetToken);
     }
 
-    @Transactional
     @Override
     public PasswordResetToken get(String token) {
-        return passwordResetTokenRepository.findByToken(token);
+        return passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(PasswordTokenException::new);
     }
 }

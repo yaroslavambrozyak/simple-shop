@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Controller
 public class OrderController {
 
-    private final OrderService orderService;
+    private OrderService orderService;
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -29,11 +31,14 @@ public class OrderController {
         return "order";
     }
 
+    //For release servlet thread! Is this right?
     @PostMapping("/order")
-    public String makeOrder(OrderedProductDTO orderedProducts, Model model) {
-        String status = orderService.makeOrder(orderedProducts);
-        model.addAttribute("status",status);
-        return null;
+    public Callable<String> makeOrder(OrderedProductDTO orderedProducts, Model model) {
+        return () -> {
+            String status1 = orderService.makeOrder(orderedProducts);
+            model.addAttribute("status", status1);
+            return null;
+        };
     }
 
 }

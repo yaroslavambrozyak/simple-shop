@@ -9,6 +9,8 @@ import com.study.yaroslavambrozyak.simpleshop.service.UserService;
 import com.study.yaroslavambrozyak.simpleshop.validator.PasswordResetTokenValidator;
 import com.study.yaroslavambrozyak.simpleshop.validator.PasswordResetValidator;
 import com.study.yaroslavambrozyak.simpleshop.validator.RegistrationValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -34,13 +36,14 @@ import java.util.UUID;
 @Controller
 public class AccountController {
 
-    private final UserService userService;
-    private final RegistrationValidator registrationValidator;
-    private final EmailService emailService;
-    private final PasswordResetTokenValidator passwordResetTokenValidator;
-    private final PasswordResetTokenService passwordResetTokenService;
-    private final PasswordResetValidator passwordResetValidator;
-    private final MessageSource messageSource;
+    private UserService userService;
+    private RegistrationValidator registrationValidator;
+    private EmailService emailService;
+    private PasswordResetTokenValidator passwordResetTokenValidator;
+    private PasswordResetTokenService passwordResetTokenService;
+    private PasswordResetValidator passwordResetValidator;
+    private MessageSource messageSource;
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 
     @Autowired
@@ -84,7 +87,7 @@ public class AccountController {
         try {
             request.login(userDTO.getEmail(), userDTO.getPassword());
         } catch (ServletException e) {
-            e.printStackTrace();
+           logger.error("error during login",e);
         }
         return "redirect:/";
     }
@@ -95,7 +98,7 @@ public class AccountController {
     }
 
     @PostMapping("/resetPassword")
-    public String resetPasswordProcess(String email, HttpServletRequest request) {
+    public String resetPasswordProcess(String email) {
         User user = userService.findUserByEmail(email);
         String token = UUID.randomUUID().toString();
         passwordResetTokenService.create(user, token);
@@ -136,6 +139,5 @@ public class AccountController {
         return messageSource.getMessage("reset-password.email"
                 ,new Object[]{url}, LocaleContextHolder.getLocale());
     }
-
 
 }
