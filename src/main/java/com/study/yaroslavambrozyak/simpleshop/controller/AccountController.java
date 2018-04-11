@@ -17,7 +17,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,10 +25,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 
@@ -44,6 +41,16 @@ public class AccountController {
     private PasswordResetValidator passwordResetValidator;
     private MessageSource messageSource;
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
+    private final String LOGIN_VIEW = "login";
+    private final String REGISTRATION_VIEW = "registration";
+    private final String RESET_PASSWORD_FORM = "reset-password-email-form";
+    private final String RESET_PASSWORD_EMAIL_CONFIRM_VIEW = "reset-password-email-send";
+    private final String RESET_PASSWORD_TOKEN_FAIL_VIEW = "reset-password-token-fail";
+    private final String RESET_PASSWORD_TOKEN_SUCCESS_VIEW = "reset-password-new-password";
+
+    private final String REDIRECT_MAIN = "redirect:/";
+    private final String REDIRECT_EMAIL_CONFIRM = "redirect:/resetEmail";
 
 
     @Autowired
@@ -63,18 +70,18 @@ public class AccountController {
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
         if (!isAnonymous())
-            return "redirect:/";
+            return REDIRECT_MAIN;
         if (error != null && !error.isEmpty())
             model.addAttribute("err", "validation.login.fail");
-        return "login";
+        return LOGIN_VIEW;
     }
 
     @GetMapping("/registration")
     public String registration(Model model) {
         if (!isAnonymous())
-            return "redirect:/";
+            return REDIRECT_MAIN;
         model.addAttribute("reg", new RegistrationUserDTO());
-        return "registration";
+        return REGISTRATION_VIEW;
     }
 
     @PostMapping("/registration")
@@ -82,19 +89,19 @@ public class AccountController {
                                       HttpServletRequest request) {
         registrationValidator.validate(userDTO, bindingResult);
         if (bindingResult.hasErrors())
-            return "registration";
+            return REGISTRATION_VIEW;
         userService.register(userDTO);
         try {
             request.login(userDTO.getEmail(), userDTO.getPassword());
         } catch (ServletException e) {
-           logger.error("error during login",e);
+            logger.error("error during login", e);
         }
-        return "redirect:/";
+        return REDIRECT_MAIN;
     }
 
     @GetMapping("/resetPassword")
     public String resetPassword() {
-        return "reset-password-email-form";
+        return RESET_PASSWORD_FORM;
     }
 
     @PostMapping("/resetPassword")
@@ -103,30 +110,30 @@ public class AccountController {
         String token = UUID.randomUUID().toString();
         passwordResetTokenService.create(user, token);
         emailService.sendMessage(user.getEmail(), prepareResetPasswordText(user.getId(), token));
-        return "redirect:/resetEmail";
+        return REDIRECT_EMAIL_CONFIRM;
     }
 
     @GetMapping("/resetEmail")
     public String resetEmail() {
-        return "reset-password-email-send";
+        return RESET_PASSWORD_EMAIL_CONFIRM_VIEW;
     }
 
     @GetMapping("/reset")
     public String resetPassword(Model model, @RequestParam("id") Long id, @RequestParam("token") String token) {
         boolean isValid = passwordResetTokenValidator.validate(id, token);
         if (!isValid)
-            return "reset-password-token-fail";
+            return RESET_PASSWORD_TOKEN_FAIL_VIEW;
         model.addAttribute("change", new PasswordResetDTO());
-        return "reset-password-new-password";
+        return RESET_PASSWORD_TOKEN_SUCCESS_VIEW;
     }
 
     @PostMapping("/savePassword")
     public String savePassword(PasswordResetDTO passwordResetDTO, BindingResult bindingResult) {
         passwordResetValidator.validate(passwordResetDTO, bindingResult);
         if (bindingResult.hasErrors())
-            return "reset-password-new-password";
+            return RESET_PASSWORD_TOKEN_SUCCESS_VIEW;
         userService.changePassword(passwordResetDTO.getPassword());
-        return "redirect:/";
+        return REDIRECT_MAIN;
     }
 
     private boolean isAnonymous() {
@@ -137,7 +144,7 @@ public class AccountController {
     private String prepareResetPasswordText(Long id, String token) {
         String url = "/reset?id=" + id + "&token=" + token;
         return messageSource.getMessage("reset-password.email"
-                ,new Object[]{url}, LocaleContextHolder.getLocale());
+                , new Object[]{url}, LocaleContextHolder.getLocale());
     }
 
 }

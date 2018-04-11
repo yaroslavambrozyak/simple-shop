@@ -5,22 +5,11 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="navbar-collapse collapse" id="navbarCollapse" style="">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-        </ul>
         <div class="dropdown open" th:switch="${user==null}">
             <div th:case="true">
-                <a class="btn btn-secondary">
-                Reg or Log
-            </a></div>
+                <a class="btn btn-secondary" href="/registration">Registration</a>
+                <a class="btn btn-secondary" href="/login">Login</a>
+            </div>
             <div th:case="false">
                 <a class="btn btn-secondary dropdown-toggle" href="http://example.com" id="dropdownMenuLink"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${user}">
@@ -35,8 +24,8 @@
             </div>
         </div>
         <form class="form-inline mt-2 mt-md-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <input class="form-control mr-sm-2" id="search-form" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="search()">Search</button>
         </form>
     </div>
 </nav>

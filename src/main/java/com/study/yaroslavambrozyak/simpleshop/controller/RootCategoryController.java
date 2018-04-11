@@ -16,16 +16,19 @@ public class RootCategoryController {
 
     private RootCategoryService mainService;
 
+    private final String ROOT_CATEGORY_FRAGMENT = "/fragment/root-category-fragment";
+    private final String ROOT_CATEGORY_VIEW = "index";
+
     @Autowired
     public RootCategoryController(RootCategoryService mainService) {
         this.mainService = mainService;
     }
 
     @GetMapping("/")
-    public String index(HttpServletRequest request, Model model){
+    public String index(HttpServletRequest request, Model model) {
         List<RootCategory> categories = mainService.getRootCategories();
-        model.addAttribute("categories",categories);
-        return AjaxUtil.isAjax(request)?"/fragment/root-category-fragment":"index";
+        model.addAttribute("categories", categories);
+        return AjaxUtil.isAjax(request) ? ROOT_CATEGORY_FRAGMENT : ROOT_CATEGORY_VIEW;
     }
 
 }

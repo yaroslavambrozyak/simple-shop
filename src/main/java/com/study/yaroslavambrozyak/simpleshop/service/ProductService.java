@@ -22,7 +22,7 @@ public interface ProductService {
 
     void subtractQuantity(Product product,int quantity);
 
-    void addProduct(ProductDTO productDTO,CommonsMultipartFile[] imagePaths);
+    void addProduct(ProductDTO productDTO);
 
     void deleteProduct(Long id);
 

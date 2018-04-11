@@ -1,9 +1,9 @@
 package com.study.yaroslavambrozyak.simpleshop.controller;
 
 import com.study.yaroslavambrozyak.simpleshop.entity.Product;
+import com.study.yaroslavambrozyak.simpleshop.search.ProductSpecificationBuilder;
 import com.study.yaroslavambrozyak.simpleshop.service.ProductService;
 import com.study.yaroslavambrozyak.simpleshop.util.AjaxUtil;
-import com.study.yaroslavambrozyak.simpleshop.search.ProductSpecificationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,13 +22,15 @@ public class ProductController {
 
     private ProductService productService;
     private final int DEFAULT_SIZE = 10;
+    private final String PRODUCTS_FRAGMENT = "/fragment/products-fragment";
+    private final String PRODUCTS_VIEW = "products-list";
+    private final String PRODUCT_VIEW = "product-page";
 
     @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
-    // Pageable throws error ??????????
     @GetMapping("/products")
     public String getProducts(@RequestParam(value = "id") Long categoryId,
                               @RequestParam(value = "filter", required = false) String filter,
@@ -38,20 +40,20 @@ public class ProductController {
             Specification<Product> specification = createSpecification(categoryId, filter);
             Page<Product> products = productService
                     .getFilteredProductsByCategory(specification, PageRequest.of(page, DEFAULT_SIZE));
-            model.addAttribute("products", products.getContent());
+            model.addAttribute("products", products);
         } else {
             Page<Product> products = productService
                     .getProductsByCategory(categoryId, PageRequest.of(page, DEFAULT_SIZE));
-            model.addAttribute("products", products.getContent());
+            model.addAttribute("products", products);
         }
-        return AjaxUtil.isAjax(request) ? "/fragment/products-fragment" : "products";
+        return AjaxUtil.isAjax(request) ? PRODUCTS_FRAGMENT : PRODUCTS_VIEW ;
     }
 
     @GetMapping("/product")
     public String getProduct(@RequestParam("id") Long id, Model model) {
         Product product = productService.getProduct(id);
         model.addAttribute("product", product);
-        return "product";
+        return PRODUCT_VIEW;
     }
 
     private Specification<Product> createSpecification(Long id, String filter) {

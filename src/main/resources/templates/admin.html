@@ -5,11 +5,22 @@
 <body>
 <!--navigation-->
 <div th:replace="/fragment/navigation"></div>
-<!--main-->
-<div class="main-container" th:include="/fragment/sub-category-fragment">
+<div class="description">This is admin panel. Lalaal click at link alalalal bablabla asdqeee</div>
+<div class="admin-buttons">
+    <button type="button" onclick="doAjax('/admin/root','get')" class="btn btn-primary">Root Category</button>
+    <button type="button" onclick="doAjax('/admin/category','get')" class="btn btn-primary">Sub Category</button>
+    <button type="button" onclick="doAjax('/admin/product','get')" class="btn btn-primary">Products</button>
 </div>
+<!--main-->
+<div class="main-container">
+</div>
+<script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>

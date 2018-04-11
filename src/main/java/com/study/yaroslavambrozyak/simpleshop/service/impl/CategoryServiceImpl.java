@@ -46,7 +46,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Cacheable(value = "subCategories")
     public List<SubCategory> getSubCategoriesById(Long id) {
-        return subCategoryRepository.findAllByRootCategory_Id(id);
+        List<SubCategory> categories = subCategoryRepository.findAllByRootCategory_Id(id);
+        if (categories.size()==0)
+            throw new NotFoundException();
+        return categories;
+    }
+
+    @Override
+    public List<SubCategory> getAllSubCategories() {
+        return subCategoryRepository.findAll();
     }
 
     @Override
@@ -56,9 +64,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @CacheEvict(value = "subCategories", allEntries = true)
     @Override
-    public void addSubCategory(SubCategoryDTO subCategoryDTO, CommonsMultipartFile image) {
+    public void addSubCategory(SubCategoryDTO subCategoryDTO) {
         try {
-            String path = imageUtil.saveImage(image);
+            String path = imageUtil.saveImage(subCategoryDTO.getImage());
             SubCategory subCategory = modelMapper.map(subCategoryDTO, SubCategory.class);
             subCategory.setImagePath(path);
             subCategory.setRootCategory(rootCategoryService.getRootCategory(subCategoryDTO.getRootCategoryId()));
@@ -77,6 +85,20 @@ public class CategoryServiceImpl implements CategoryService {
             subCategory.setRootCategory(rootCategory);
         }
         nullAwareBean.copyProperties(subCategoryDTO, subCategory);
+        if(subCategoryDTO.getImage()!=null){
+            try {
+                String path = imageUtil.saveImage(subCategoryDTO.getImage());
+                imageUtil.deleteImage(subCategory.getImagePath());
+                subCategory.setImagePath(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         subCategoryRepository.save(subCategory);
+    }
+
+    @Override
+    public void deleteSubCategory(Long id) {
+        subCategoryRepository.deleteById(id);
     }
 }

@@ -1,0 +1,14 @@
+<div class="container-fluid" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="row">
+        <div th:each="category : ${categories}" class="col-lg-4 col-md-6 col-sm-12">
+            <div class="card">
+                <img class="card-img-top" th:src="${category.imagePath}" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text" th:text="${category.name}">
+                        Category Name</p>
+                </div>
+                <span class="category-id" style="display: none;" th:text="${category.id}"></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,10 @@ public class OrderController {
 
     private OrderService orderService;
 
+    private final String ORDER_VIEW = "order";
+
+    private final String REDIRECT_ORDER = "redirect:/order";
+
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
@@ -28,7 +32,7 @@ public class OrderController {
     public String getUserOrders(Model model) {
         List<Order> userOrder = orderService.getUserOrder();
         model.addAttribute("orders", userOrder);
-        return "order";
+        return ORDER_VIEW;
     }
 
     //For release servlet thread! Is this right?
@@ -37,7 +41,7 @@ public class OrderController {
         return () -> {
             String status1 = orderService.makeOrder(orderedProducts);
             model.addAttribute("status", status1);
-            return null;
+            return ORDER_VIEW;
         };
     }
 

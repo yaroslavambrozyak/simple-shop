@@ -1,9 +1,13 @@
-
 $(".ajax-url").on("click",function (event) {
     event.preventDefault();
     var href = $(this).attr('href')
+    doAjax(href,'get');
+});
+
+function doAjax(href,type) {
     $.ajax({
-        url:href
+        url:href,
+        type:type.toUpperCase()
     }).done(function (data) {
         var main = $(".main-container");
         main.empty();
@@ -11,5 +15,5 @@ $(".ajax-url").on("click",function (event) {
         window.history.pushState("obj", "title", href);
     }).fail(function () {
 
-    })
-})
+    });
+}

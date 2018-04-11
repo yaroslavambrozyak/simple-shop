@@ -18,4 +18,5 @@ public class OrderedProduct {
     @JoinColumn(name="product_id")
     private Product product;
     private Integer quantity;
+
 }

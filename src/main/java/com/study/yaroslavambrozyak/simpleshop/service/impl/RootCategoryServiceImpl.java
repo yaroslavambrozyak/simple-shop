@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
@@ -55,9 +56,9 @@ public class RootCategoryServiceImpl implements RootCategoryService {
 
     @CacheEvict(value = "rootCategory", allEntries = true)
     @Override
-    public void addRootCategory(RootCategoryDTO rootCategoryDTO, CommonsMultipartFile image) {
+    public void addRootCategory(RootCategoryDTO rootCategoryDTO) {
         try {
-            String path = imageUtil.saveImage(image);
+            String path = imageUtil.saveImage(rootCategoryDTO.getImage());
             RootCategory rootCategory = modelMapper.map(rootCategoryDTO, RootCategory.class);
             rootCategory.setImagePath(path);
             rootCategoryRepository.save(rootCategory);
@@ -71,6 +72,15 @@ public class RootCategoryServiceImpl implements RootCategoryService {
     public void updateRootCategory(RootCategoryDTO rootCategoryDTO) {
         RootCategory rootCategory = this.getRootCategory(rootCategoryDTO.getId());
         nullAwareBean.copyProperties(rootCategoryDTO, rootCategory);
+        if(rootCategoryDTO.getImage()!=null){
+            try {
+                String path = imageUtil.saveImage(rootCategoryDTO.getImage());
+                imageUtil.deleteImage(rootCategory.getImagePath());
+                rootCategory.setImagePath(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         rootCategoryRepository.save(rootCategory);
     }
 

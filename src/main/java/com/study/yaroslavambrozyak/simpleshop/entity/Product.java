@@ -21,9 +21,9 @@ public class Product {
     private BigDecimal price;
     private Boolean availability;
     private Integer quantity;
-    @OneToMany(mappedBy = "product")
+    @ElementCollection
     private List<Characteristics> characteristics;
-    @OneToMany(mappedBy = "product")
+    @ElementCollection
     private List<Image> images;
     @ManyToOne
     private SubCategory category;

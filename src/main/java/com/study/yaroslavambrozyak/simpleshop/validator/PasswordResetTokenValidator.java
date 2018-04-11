@@ -2,7 +2,9 @@ package com.study.yaroslavambrozyak.simpleshop.validator;
 
 import com.study.yaroslavambrozyak.simpleshop.entity.PasswordResetToken;
 import com.study.yaroslavambrozyak.simpleshop.entity.User;
+import com.study.yaroslavambrozyak.simpleshop.exception.PasswordTokenException;
 import com.study.yaroslavambrozyak.simpleshop.repository.PasswordResetTokenRepository;
+import com.study.yaroslavambrozyak.simpleshop.service.PasswordResetTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,11 +19,15 @@ import java.util.Objects;
 @Component
 public class PasswordResetTokenValidator {
 
+    private PasswordResetTokenService passwordResetTokenService;
+
     @Autowired
-    private PasswordResetTokenRepository passwordResetTokenRepository;
+    public PasswordResetTokenValidator(PasswordResetTokenService passwordResetTokenService) {
+        this.passwordResetTokenService = passwordResetTokenService;
+    }
 
     public boolean validate(Long id,String token){
-        PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
+        PasswordResetToken passToken = passwordResetTokenService.get(token);
         if(!Objects.equals(passToken.getUser().getId(), id))
             return false;
         if(!passToken.getExpiryDate().after(new Date()))
